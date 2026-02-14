@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.13-slim-buster
 
 # Set the working directory in the container
 WORKDIR /app
@@ -12,4 +12,4 @@ RUN pip install -r requirements.txt
 COPY . .
 
 # Command to run on container start
-CMD ["python", "main.py" ]
+CMD ["python", "cleaning_bot.py" ]

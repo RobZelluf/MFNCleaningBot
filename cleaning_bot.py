@@ -1,7 +1,6 @@
 import datetime
 import json
 import logging
-import pprint
 from time import sleep
 
 import schedule
