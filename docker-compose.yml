@@ -1,0 +1,6 @@
+services:
+  cleaning_bot:
+    container_name: mfn_cleaning_bot
+    image: mfn_cleaning_bot:latest
+    build: .
+    restart: always
