@@ -9,6 +9,7 @@ import schedule
 import requests
 import yaml
 
+
 def non_blocking(handler):
     def wrapper(*args, **kwargs):
         try:
@@ -18,6 +19,7 @@ def non_blocking(handler):
             return None
 
     return wrapper
+
 
 @non_blocking
 def req_get(*args, **kwargs):
@@ -167,8 +169,6 @@ def main():
     while True:
         scheduler.run_pending()
         sleep(1)
-
-
 
 
 if __name__ == "__main__":
