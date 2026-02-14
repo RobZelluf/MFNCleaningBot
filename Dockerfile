@@ -1,4 +1,4 @@
-FROM python:3.13-slim-buster
+FROM python:3.13-slim
 
 # Set the working directory in the container
 WORKDIR /app
