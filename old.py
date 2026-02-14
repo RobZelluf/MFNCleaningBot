@@ -45,9 +45,11 @@ SET_COMMANDS_URL = f"{BASE_URL}/setMyCommands"
 def non_blocking(handler):
     def wrapper(*args, **kwargs):
         try:
+
             return handler(*args, **kwargs)
         except Exception:
             return None
+
     return wrapper
 
 
@@ -123,6 +125,7 @@ def process_updates(updates, schedules):
     for update in updates:
         if "message" in update:
             process_message(update["message"], schedules)
+
         last_id = update["update_id"]
 
     return last_id
