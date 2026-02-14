@@ -3,8 +3,7 @@ import requests
 import pprint
 import datetime
 import json
-from yaml import load, dump, YAMLError
-import pytz
+from yaml import load, YAMLError
 
 try:
     from yaml import CLoader as Loader, CDumper as Dumper
@@ -86,23 +85,28 @@ class CleaningSchedules:
     def build_jobs_msg(self):
         assigned_task = self._assign_tasks()
         msg = "Cleaning Tasks for this weekend:\n"
+
         for p, j in assigned_task.items():
             msg += f"- {p}: {self.job_list[j]}\n"
+
         return msg
 
     def _assign_tasks(self):
         week_number = get_week_number()
         task = week_number % len(self.users_list)
         assigned_task = {}
+
         for p in self.users_list:
             assigned_task[p] = task
             task = (task + 1) % len(self.users_list)
+
         return assigned_task
 
 
 def get_wakeup_datetime():
     wake_up_day = datetime.date.today().toordinal() + 1
     wake_up_time = datetime.timedelta(hours=8)
+
     return datetime.datetime.fromordinal(wake_up_day) + wake_up_time
 
 
@@ -115,16 +119,19 @@ def process_message(msg, schedules):
 
 def process_updates(updates, schedules):
     last_id = None
+
     for update in updates:
         if "message" in update:
             process_message(update["message"], schedules)
         last_id = update["update_id"]
+
     return last_id
 
 
 def set_commands():
     commands = [{"command": "get_tasks", "description": "Show assigned tasks"}]
     res = req_get(f"{SET_COMMANDS_URL}?commands={json.dumps(commands)}")
+
     if not res or res.status_code != 200:
         print(f"ERROR: Unable to set bot commands!\n{res.text}")
 
@@ -143,6 +150,7 @@ def main():
             print(f"Processing day {today}!")
             if today == 6:
                 send_message(GROUP_ID, cleaning_schedules.build_jobs_msg())
+
             elif today == 7:
                 text = f"REMINDER!\n{cleaning_schedules.build_jobs_msg()}"
                 send_message(GROUP_ID, text)
