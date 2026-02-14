@@ -11,11 +11,6 @@ try:
 except ImportError:
     from yaml import Loader, Dumper
 
-# TODO: TO IMPLEMENT
-# TODO: - Allow users to message back to the bot to notify a completed cleaning task
-# TODO: - Make a conda environment for this
-# TODO: - Add proper error handling
-
 
 def read_yaml_file_and_check_for_items(file_path, required_items):
     try:
@@ -136,9 +131,8 @@ def set_commands():
 
 def main():
     cleaning_schedules = CleaningSchedules("configs.yaml")
-    # text = f"I'm alive bitches. This bot is set up for users {cleaning_schedules.users_list} with tasks {cleaning_schedules.job_list}"
+
     set_commands()
-    # send_message(GROUP_ID, text)
     wakeup_datetime = datetime.datetime.fromordinal(1)
     last_update_id = None
 
