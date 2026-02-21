@@ -88,6 +88,7 @@ class CleaningBot:
 
         return updates
 
+    @non_blocking
     def send_message(self, chat_id, text):
         self.logger.debug(f"Sending message to {chat_id}")
 
@@ -125,8 +126,10 @@ class CleaningBot:
         commands = [{"command": "get_tasks", "description": "Show assigned tasks"}]
         res = req_get(f"{self._get_command_url()}?commands={json.dumps(commands)}")
 
-        if not res or res.status_code != 200:
-            print(f"ERROR: Unable to set bot commands!\n{res.text}")
+        if not res:
+            print(f"ERROR: Unable to set bot commands!")
+        elif getattr(res, 'status_code', None) != 200:
+            print(f"ERROR: Unable to set bot commands! Status: {getattr(res, 'status_code', 'unknown')}")
 
     def check_updates(self):
         self.logger.debug(f"Checking for updates... (last_msg_id={self.last_msg_id})")
