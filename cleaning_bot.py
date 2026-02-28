@@ -12,9 +12,9 @@ import yaml
 def non_blocking(handler):
     def wrapper(*args, **kwargs):
         try:
-
             return handler(*args, **kwargs)
-        except Exception:
+        except Exception as e:
+            logging.getLogger("CleaningBot").exception(f"Error in {handler.__name__}: {e}")
             return None
 
     return wrapper
@@ -22,6 +22,7 @@ def non_blocking(handler):
 
 @non_blocking
 def req_get(*args, **kwargs):
+    kwargs.setdefault("timeout", 30)
     return requests.get(*args, **kwargs)
 
 
@@ -93,7 +94,7 @@ class CleaningBot:
         self.logger.debug(f"Sending message to {chat_id}")
 
         message_url = self._get_message_url()
-        res = requests.get(f"{message_url}?chat_id={chat_id}&text={text}")
+        res = requests.get(f"{message_url}?chat_id={chat_id}&text={text}", timeout=30)
 
         return res.status_code if res else None
 
@@ -169,8 +170,15 @@ def main():
     scheduler.every().sunday.at("10:00").do(bot.send_sunday_message)
 
     while True:
-        scheduler.run_pending()
-        sleep(1)
+        try:
+            scheduler.run_pending()
+            sleep(1)
+        except KeyboardInterrupt:
+            bot.logger.info("Shutting down...")
+            break
+        except Exception as e:
+            bot.logger.exception(f"Unexpected error in main loop: {e}")
+            sleep(5)
 
 
 if __name__ == "__main__":
