@@ -1,5 +1,14 @@
 FROM python:3.13-slim
 
+# Set timezone to Europe/Helsinki
+ENV TZ=Europe/Helsinki
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends tzdata \
+    && ln -snf /usr/share/zoneinfo/Europe/Helsinki /etc/localtime \
+    && echo "Europe/Helsinki" > /etc/timezone \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
 # Set the working directory in the container
 WORKDIR /app
 
