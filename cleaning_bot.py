@@ -108,7 +108,8 @@ class CleaningBot:
         return msg
 
     def process_message(self, msg):
-        if msg["text"] == "/get_tasks":
+        # Safely handle messages without a 'text' field
+        if "text" in msg and msg["text"] == "/get_tasks":
             chat_id = msg["chat"]["id"]
             self.send_message(chat_id, self.build_jobs_msg())
 
